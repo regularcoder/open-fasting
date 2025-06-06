@@ -133,6 +133,12 @@ function App() {
         return showElapsed ? 'Time Elapsed' : 'Time Remaining'
     }
 
+    const deleteFast = (fastId: string) => {
+        const updatedHistory = fastHistory.filter(record => record.id !== fastId)
+        setFastHistory(updatedHistory)
+        localStorage.setItem('fastHistory', JSON.stringify(updatedHistory))
+    }
+
     return (
         <div className="app">
             <div className="container">
@@ -173,14 +179,23 @@ function App() {
                         <div className="history-list">
                             {fastHistory.map((record) => (
                                 <div key={record.id} className="history-item">
-                                    <div className="history-duration">
-                                        {formatTime(record.duration)}
+                                    <div className="history-content">
+                                        <div className="history-duration">
+                                            {formatTime(record.duration)}
+                                        </div>
+                                        <div className="history-dates">
+                                            <span className="start-date">{formatDate(record.startTime)}</span>
+                                            <span className="separator">→</span>
+                                            <span className="end-date">{formatDate(record.endTime)}</span>
+                                        </div>
                                     </div>
-                                    <div className="history-dates">
-                                        <span className="start-date">{formatDate(record.startTime)}</span>
-                                        <span className="separator">→</span>
-                                        <span className="end-date">{formatDate(record.endTime)}</span>
-                                    </div>
+                                    <button 
+                                        className="delete-button"
+                                        onClick={() => deleteFast(record.id)}
+                                        title="Delete this fast"
+                                    >
+                                        🗑️
+                                    </button>
                                 </div>
                             ))}
                         </div>
