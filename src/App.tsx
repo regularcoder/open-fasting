@@ -10,13 +10,15 @@ interface FastRecord {
 
 type FastingState = 'fasting' | 'eating'
 
+const FASTING_DURATION_HRS = 16
+const FASTING_DURATION_MS = FASTING_DURATION_HRS * 60 * 60 * 1000 // 16 hours in milliseconds
+const EATING_DURATION_MS = (24 - FASTING_DURATION_HRS) * 60 * 60 * 1000 // 8 hours in milliseconds
+
 function App() {
     const [fastingState, setFastingState] = useState<FastingState>('eating')
     const [startTime, setStartTime] = useState<Date | null>(null)
     const [timeRemaining, setTimeRemaining] = useState<number>(0)
     const [fastHistory, setFastHistory] = useState<FastRecord[]>([])
-    const [fastingDuration] = useState<number>(16 * 60 * 60 * 1000) // 16 hours in milliseconds
-    const [eatingDuration] = useState<number>(8 * 60 * 60 * 1000) // 8 hours in milliseconds
     const [showElapsed, setShowElapsed] = useState<boolean>(false)
     const [showEditTime, setShowEditTime] = useState<boolean>(false)
 
@@ -47,7 +49,7 @@ function App() {
             interval = setInterval(() => {
                 const now = new Date()
                 const elapsed = now.getTime() - startTime.getTime()
-                const remaining = fastingDuration - elapsed
+                const remaining = FASTING_DURATION_MS - elapsed
 
                 if (remaining <= 0) {
                     endFast()
@@ -59,19 +61,19 @@ function App() {
             interval = setInterval(() => {
                 const now = new Date()
                 const elapsed = now.getTime() - startTime.getTime()
-                const remaining = eatingDuration - elapsed
+                const remaining = EATING_DURATION_MS - elapsed
                 setTimeRemaining(remaining > 0 ? remaining : 0)
             }, 1000)
         }
 
         return () => clearInterval(interval)
-    }, [showElapsed, fastingState, startTime, fastingDuration])
+    }, [showElapsed, fastingState, startTime])
 
     const startFast = () => {
         const now = new Date()
         setFastingState('fasting')
         setStartTime(now)
-        setTimeRemaining(fastingDuration)
+        setTimeRemaining(FASTING_DURATION_MS)
         localStorage.setItem('fastingState', 'fasting')
         localStorage.setItem('startTime', now.toISOString())
     }
