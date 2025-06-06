@@ -26,8 +26,11 @@ export const TimerSection = ({
 }: TimerSectionProps) => {
     const [showEditTime, setShowEditTime] = useState(false)
 
-    const handleUpdateTime = (newTime: Date) => {
-        onUpdateStartTime(newTime)
+    const handleEditModalClose = (updatedTime?: Date) => {
+        setShowEditTime(false)
+        if (updatedTime) {
+            onUpdateStartTime(updatedTime)
+        }
     }
 
     return (
@@ -74,8 +77,7 @@ export const TimerSection = ({
             <EditTimeModal
                 isOpen={showEditTime}
                 startTime={startTime}
-                onClose={() => setShowEditTime(false)}
-                onUpdateTime={handleUpdateTime}
+                onClose={handleEditModalClose}
             />
         </>
     )
