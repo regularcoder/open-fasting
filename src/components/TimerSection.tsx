@@ -28,7 +28,6 @@ export const TimerSection = ({
 
     const handleUpdateTime = (newTime: Date) => {
         onUpdateStartTime(newTime)
-        setShowEditTime(false)
     }
 
     return (
