@@ -158,7 +158,7 @@ function App() {
         <div className="app">
             <div className="container">
                 <header className="header">
-                    <h1 className="title">Intermittent Fasting Tracker</h1>
+                    <h1 className="title">Simple Fast<br/>(Intermittent Fasting Tracker)</h1>
                 </header>
 
                 <div className="timer-section">
