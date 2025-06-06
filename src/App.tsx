@@ -1,165 +1,194 @@
-import { useState, useEffect } from 'react'
+import {useEffect, useState} from 'react'
 import './App.css'
 
 interface FastRecord {
-  id: string
-  startTime: Date
-  endTime: Date
-  duration: number
+    id: string
+    startTime: Date
+    endTime: Date
+    duration: number
 }
 
 type FastingState = 'fasting' | 'eating'
 
 function App() {
-  const [fastingState, setFastingState] = useState<FastingState>('eating')
-  const [startTime, setStartTime] = useState<Date | null>(null)
-  const [timeRemaining, setTimeRemaining] = useState<number>(0)
-  const [fastHistory, setFastHistory] = useState<FastRecord[]>([])
-  const [fastingDuration] = useState<number>(16 * 60 * 60 * 1000) // 16 hours in milliseconds
+    const [fastingState, setFastingState] = useState<FastingState>('eating')
+    const [startTime, setStartTime] = useState<Date | null>(null)
+    const [timeRemaining, setTimeRemaining] = useState<number>(0)
+    const [fastHistory, setFastHistory] = useState<FastRecord[]>([])
+    const [fastingDuration] = useState<number>(16 * 60 * 60 * 1000) // 16 hours in milliseconds
+    const [eatingDuration] = useState<number>(8 * 60 * 60 * 1000) // 8 hours in milliseconds
+    const [showElapsed, setShowElapsed] = useState<boolean>(false)
 
-  useEffect(() => {
-    const savedState = localStorage.getItem('fastingState')
-    const savedStartTime = localStorage.getItem('startTime')
-    const savedHistory = localStorage.getItem('fastHistory')
+    useEffect(() => {
+        const savedState = localStorage.getItem('fastingState')
+        const savedStartTime = localStorage.getItem('startTime')
+        const savedHistory = localStorage.getItem('fastHistory')
 
-    if (savedState && savedStartTime) {
-      setFastingState(savedState as FastingState)
-      setStartTime(new Date(savedStartTime))
-    }
-
-    if (savedHistory) {
-      setFastHistory(JSON.parse(savedHistory))
-    }
-  }, [])
-
-  useEffect(() => {
-    let interval: number | undefined
-
-    if (fastingState === 'fasting' && startTime) {
-      interval = setInterval(() => {
-        const now = new Date()
-        const elapsed = now.getTime() - startTime.getTime()
-        const remaining = fastingDuration - elapsed
-
-        if (remaining <= 0) {
-          endFast()
-        } else {
-          setTimeRemaining(remaining)
+        if (savedState && savedStartTime) {
+            setFastingState(savedState as FastingState)
+            setStartTime(new Date(savedStartTime))
         }
-      }, 1000)
-    } else if (fastingState === 'eating' && startTime) {
-      interval = setInterval(() => {
+
+        if (savedHistory) {
+            const parsedHistory = JSON.parse(savedHistory).map((record: any) => ({
+                ...record,
+                startTime: new Date(record.startTime),
+                endTime: new Date(record.endTime)
+            }))
+            setFastHistory(parsedHistory)
+        }
+    }, [])
+
+    useEffect(() => {
+        let interval: number | undefined
+
+        if (fastingState === 'fasting' && startTime) {
+            interval = setInterval(() => {
+                const now = new Date()
+                const elapsed = now.getTime() - startTime.getTime()
+                const remaining = fastingDuration - elapsed
+
+                if (remaining <= 0) {
+                    endFast()
+                } else {
+                    setTimeRemaining(remaining)
+                }
+            }, 1000)
+        } else if (fastingState === 'eating' && startTime) {
+            interval = setInterval(() => {
+                const now = new Date()
+                const elapsed = now.getTime() - startTime.getTime()
+                const remaining = eatingDuration - elapsed
+                setTimeRemaining(remaining > 0 ? remaining : 0)
+            }, 1000)
+        }
+
+        return () => clearInterval(interval)
+    }, [showElapsed, fastingState, startTime, fastingDuration])
+
+    const startFast = () => {
         const now = new Date()
-        const elapsed = now.getTime() - startTime.getTime()
-        setTimeRemaining(elapsed)
-      }, 1000)
+        setFastingState('fasting')
+        setStartTime(now)
+        setTimeRemaining(fastingDuration)
+        localStorage.setItem('fastingState', 'fasting')
+        localStorage.setItem('startTime', now.toISOString())
     }
 
-    return () => clearInterval(interval)
-  }, [fastingState, startTime, fastingDuration])
+    const endFast = () => {
+        if (startTime) {
+            const endTime = new Date()
+            const duration = endTime.getTime() - startTime.getTime()
 
-  const startFast = () => {
-    const now = new Date()
-    setFastingState('fasting')
-    setStartTime(now)
-    setTimeRemaining(fastingDuration)
-    localStorage.setItem('fastingState', 'fasting')
-    localStorage.setItem('startTime', now.toISOString())
-  }
+            const newRecord: FastRecord = {
+                id: Date.now().toString(),
+                startTime,
+                endTime,
+                duration
+            }
 
-  const endFast = () => {
-    if (startTime) {
-      const endTime = new Date()
-      const duration = endTime.getTime() - startTime.getTime()
-      
-      const newRecord: FastRecord = {
-        id: Date.now().toString(),
-        startTime,
-        endTime,
-        duration
-      }
+            const updatedHistory = [newRecord, ...fastHistory]
+            setFastHistory(updatedHistory)
+            localStorage.setItem('fastHistory', JSON.stringify(updatedHistory))
+        }
 
-      const updatedHistory = [newRecord, ...fastHistory]
-      setFastHistory(updatedHistory)
-      localStorage.setItem('fastHistory', JSON.stringify(updatedHistory))
+        setFastingState('eating')
+        setStartTime(new Date())
+        localStorage.setItem('fastingState', 'eating')
+        localStorage.setItem('startTime', new Date().toISOString())
     }
 
-    setFastingState('eating')
-    setStartTime(new Date())
-    localStorage.setItem('fastingState', 'eating')
-    localStorage.setItem('startTime', new Date().toISOString())
-  }
+    const formatTime = (milliseconds: number): string => {
+        const hours = Math.floor(milliseconds / (1000 * 60 * 60))
+        const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000)
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+    }
 
-  const formatTime = (milliseconds: number): string => {
-    const hours = Math.floor(milliseconds / (1000 * 60 * 60))
-    const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60))
-    const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000)
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-  }
+    const formatDate = (date: Date): string => {
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+    }
 
-  const formatDate = (date: Date): string => {
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+    const toggleTimeDisplay = () => {
+        console.log(`Toggling time display to ${!showElapsed}`)
+        setShowElapsed(!showElapsed)
+    }
 
-  return (
-    <div className="app">
-      <div className="container">
-        <header className="header">
-          <h1 className="title">Intermittent Fasting Tracker</h1>
-        </header>
+    const getDisplayTime = () => {
+        if (showElapsed && startTime) {
+            const now = new Date()
+            return now.getTime() - startTime.getTime()
+        }
 
-        <div className="timer-section">
-          <div className={`status-indicator ${fastingState}`}>
-            {fastingState === 'fasting' ? '🕐' : '🍽️'}
-          </div>
-          <h2 className="status-text">
-            {fastingState === 'fasting' ? 'Fasting' : 'Eating Window'}
-          </h2>
-          <div className="timer">
-            {formatTime(timeRemaining)}
-          </div>
-          <p className="timer-label">
-            {fastingState === 'fasting' ? 'Time Remaining' : 'Time Elapsed'}
-          </p>
-          
-          <button 
-            className={`action-button ${fastingState}`}
-            onClick={fastingState === 'fasting' ? endFast : startFast}
-          >
-            {fastingState === 'fasting' ? 'End Fast' : 'Start Fast'}
-          </button>
-        </div>
+        return timeRemaining
+    }
 
-        <div className="history-section">
-          <h3 className="history-title">Past Fasts</h3>
-          {fastHistory.length === 0 ? (
-            <p className="no-history">No fasting records yet. Start your first fast!</p>
-          ) : (
-            <div className="history-list">
-              {fastHistory.map((record) => (
-                <div key={record.id} className="history-item">
-                  <div className="history-duration">
-                    {formatTime(record.duration)}
-                  </div>
-                  <div className="history-dates">
-                    <span className="start-date">{formatDate(record.startTime)}</span>
-                    <span className="separator">→</span>
-                    <span className="end-date">{formatDate(record.endTime)}</span>
-                  </div>
+    const getTimeLabel = () => {
+        return showElapsed ? 'Time Elapsed' : 'Time Remaining'
+    }
+
+    return (
+        <div className="app">
+            <div className="container">
+                <header className="header">
+                    <h1 className="title">Intermittent Fasting Tracker</h1>
+                </header>
+
+                <div className="timer-section">
+                    <div className={`status-indicator ${fastingState}`} onClick={toggleTimeDisplay}
+                         style={{cursor: 'pointer'}}>
+                        {fastingState === 'fasting' ? '🕐' : '🍽️'}
+                    </div>
+                    <h2 className="status-text">
+                        {fastingState === 'fasting' ? 'Fasting' : 'Eating Window'}
+                    </h2>
+                    <div onClick={toggleTimeDisplay} style={{cursor: 'pointer'}}>
+                        <div className="timer">
+                            {formatTime(getDisplayTime())}
+                        </div>
+                        <p className="timer-label">
+                            {getTimeLabel()}
+                        </p>
+                    </div>
+
+                    <button
+                        className={`action-button ${fastingState}`}
+                        onClick={fastingState === 'fasting' ? endFast : startFast}
+                    >
+                        {fastingState === 'fasting' ? 'End Fast' : 'Start Fast'}
+                    </button>
                 </div>
-              ))}
+
+                <div className="history-section">
+                    <h3 className="history-title">Past Fasts</h3>
+                    {fastHistory.length === 0 ? (
+                        <p className="no-history">No fasting records yet. Start your first fast!</p>
+                    ) : (
+                        <div className="history-list">
+                            {fastHistory.map((record) => (
+                                <div key={record.id} className="history-item">
+                                    <div className="history-duration">
+                                        {formatTime(record.duration)}
+                                    </div>
+                                    <div className="history-dates">
+                                        <span className="start-date">{formatDate(record.startTime)}</span>
+                                        <span className="separator">→</span>
+                                        <span className="end-date">{formatDate(record.endTime)}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
-          )}
         </div>
-      </div>
-    </div>
-  )
+    )
 }
 
 export default App
