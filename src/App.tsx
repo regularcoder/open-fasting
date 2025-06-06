@@ -18,6 +18,7 @@ function App() {
     const [fastingDuration] = useState<number>(16 * 60 * 60 * 1000) // 16 hours in milliseconds
     const [eatingDuration] = useState<number>(8 * 60 * 60 * 1000) // 8 hours in milliseconds
     const [showElapsed, setShowElapsed] = useState<boolean>(false)
+    const [showEditTime, setShowEditTime] = useState<boolean>(false)
 
     useEffect(() => {
         const savedState = localStorage.getItem('fastingState')
@@ -139,6 +140,20 @@ function App() {
         localStorage.setItem('fastHistory', JSON.stringify(updatedHistory))
     }
 
+    const updateStartTime = (newStartTime: Date) => {
+        setStartTime(newStartTime)
+        localStorage.setItem('startTime', newStartTime.toISOString())
+    }
+
+    const formatDateTimeLocal = (date: Date): string => {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hours = String(date.getHours()).padStart(2, '0')
+        const minutes = String(date.getMinutes()).padStart(2, '0')
+        return `${year}-${month}-${day}T${hours}:${minutes}`
+    }
+
     return (
         <div className="app">
             <div className="container">
@@ -163,12 +178,23 @@ function App() {
                         </p>
                     </div>
 
-                    <button
-                        className={`action-button ${fastingState}`}
-                        onClick={fastingState === 'fasting' ? endFast : startFast}
-                    >
-                        {fastingState === 'fasting' ? 'End Fast' : 'Start Fast'}
-                    </button>
+                    <div className="action-buttons">
+                        {fastingState === 'fasting' && startTime && (
+                            <button
+                                className="edit-time-button"
+                                onClick={() => setShowEditTime(true)}
+                                title="Edit start time"
+                            >
+                                ✏️
+                            </button>
+                        )}
+                        <button
+                            className={`action-button ${fastingState}`}
+                            onClick={fastingState === 'fasting' ? endFast : startFast}
+                        >
+                            {fastingState === 'fasting' ? 'End Fast' : 'Start Fast'}
+                        </button>
+                    </div>
                 </div>
 
                 <div className="history-section">
@@ -202,6 +228,32 @@ function App() {
                     )}
                 </div>
             </div>
+            
+            {showEditTime && startTime && (
+                <div className="modal-overlay" onClick={() => setShowEditTime(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="modal-title">Edit Start Time</h3>
+                        <input
+                            type="datetime-local"
+                            defaultValue={formatDateTimeLocal(startTime)}
+                            onChange={(e) => {
+                                if (e.target.value) {
+                                    updateStartTime(new Date(e.target.value))
+                                }
+                            }}
+                            className="datetime-input"
+                        />
+                        <div className="modal-buttons">
+                            <button 
+                                className="cancel-button"
+                                onClick={() => setShowEditTime(false)}
+                            >
+                                Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
