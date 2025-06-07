@@ -1,4 +1,4 @@
-import { TimerSection } from '../components/TimerSection'
+import { ModernTimerDisplay } from '../components/ModernTimerDisplay'
 import { FastHistory } from '../components/FastHistory'
 import { useFastingTimer } from '../hooks/useFastingTimer'
 import { useFastHistory } from '../hooks/useFastHistory'
@@ -19,18 +19,14 @@ export const Home = () => {
 
     return (
         <>
-            <header className="header">
-                <h1 className="title">Simple Fast<br/>(Intermittent Fasting Tracker)</h1>
-            </header>
-
-            <TimerSection
+            <ModernTimerDisplay
                 fastingState={fastingState}
                 startTime={startTime}
                 displayTime={getDisplayTime()}
                 timeLabel={getTimeLabel()}
                 onToggleTimeDisplay={toggleTimeDisplay}
                 onStartFast={startFast}
-                onEndFast={endFast}
+                onFinishFast={endFast}
                 onUpdateStartTime={updateStartTime}
             />
 

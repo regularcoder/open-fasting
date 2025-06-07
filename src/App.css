@@ -6,7 +6,7 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f8fafc;
   min-height: 100vh;
   color: #333;
 }
@@ -139,6 +139,7 @@ body {
 
 .history-section {
   margin-top: 2rem;
+  padding: 0 1rem;
 }
 
 .history-title {
@@ -338,8 +339,8 @@ body {
   background: white;
   border-radius: 16px;
   padding: 2rem;
-  max-width: 400px;
-  width: 90%;
+  max-width: 500px;
+  width: 95%;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -352,17 +353,41 @@ body {
   text-align: center;
 }
 
-.datetime-input {
+.datetime-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  text-align: left;
+}
+
+.date-input,
+.time-input {
   width: 100%;
   padding: 1rem;
   border: 2px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
   transition: all 0.2s ease;
+  letter-spacing: 0.05em;
+  text-align: center;
 }
 
-.datetime-input:focus {
+.date-input:focus,
+.time-input:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -563,4 +588,344 @@ body {
   color: #1e40af;
   font-weight: 500;
   margin: 0;
+}
+
+/* Modern Timer Display Styles */
+.modern-timer-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 1rem 1rem 1rem;
+  background: #ffffff;
+  text-align: center;
+}
+
+.timer-header {
+  margin-bottom: 2rem;
+}
+
+.fasting-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.fasting-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  color: #15803d;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.badge-icon {
+  font-size: 1rem;
+}
+
+.timer-circle-container {
+  margin-bottom: 1.5rem;
+}
+
+.circular-progress {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.circular-progress-svg {
+  /* SVG already rotated in component */
+}
+
+.circular-progress-bar {
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.circular-progress-bg {
+  opacity: 0.4;
+}
+
+.circular-progress-bar {
+  opacity: 1;
+}
+
+.circular-progress-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 200px;
+}
+
+.timer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.start-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.start-date {
+  font-size: 0.8rem;
+}
+
+.start-time {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.start-time-with-edit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.inline-edit-button {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 6px;
+  padding: 0.25rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.inline-edit-button:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: scale(1.1);
+}
+
+.inline-edit-button:active {
+  transform: scale(0.9);
+}
+
+.elapsed-time {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  color: #1f2937;
+  margin: 0.5rem 0;
+  line-height: 1;
+}
+
+.phase-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 12px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #d97706;
+}
+
+.phase-icon {
+  font-size: 0.9rem;
+}
+
+.time-label-small {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.finish-fast-button {
+  background: #22c55e;
+  border: none;
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.finish-fast-button:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+}
+
+.finish-fast-button:active {
+  transform: translateY(0);
+}
+
+.modern-action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modern-edit-button {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 48px;
+}
+
+.modern-edit-button:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: scale(1.05);
+}
+
+.modern-edit-button:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 480px) {
+  .modern-timer-display {
+    padding: 1rem 0.5rem;
+    min-height: auto;
+  }
+  
+  .timer-header {
+    margin-bottom: 1rem;
+  }
+  
+  .fasting-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .timer-circle-container {
+    margin-bottom: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .circular-progress {
+    width: 240px !important;
+    height: 240px !important;
+    flex-shrink: 0;
+  }
+  
+  .circular-progress svg {
+    width: 240px !important;
+    height: 240px !important;
+  }
+  
+  .circular-progress-content {
+    width: 160px;
+  }
+  
+  .start-info {
+    gap: 0.15rem;
+  }
+  
+  .start-date {
+    font-size: 0.7rem;
+  }
+  
+  .start-time {
+    font-size: 0.8rem;
+  }
+  
+  .start-time-with-edit {
+    gap: 0.35rem;
+  }
+  
+  .inline-edit-button {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
+    padding: 0.2rem;
+  }
+  
+  .elapsed-time {
+    font-size: 1.8rem;
+    margin: 0.25rem 0;
+  }
+  
+  .time-label-small {
+    font-size: 0.65rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .phase-indicator {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+  }
+  
+  .phase-icon {
+    font-size: 0.8rem;
+  }
+  
+  .finish-fast-button {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+  
+  .modern-edit-button {
+    min-width: 40px;
+    height: 40px;
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .history-section {
+    margin-top: 1rem;
+    padding: 0 0.5rem;
+  }
+  
+  .history-title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .history-item {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .history-duration {
+    font-size: 1.5rem;
+  }
 }
