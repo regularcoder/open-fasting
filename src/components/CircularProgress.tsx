@@ -48,7 +48,7 @@ export const CircularProgress = ({
           strokeDashoffset={strokeDashoffset}
           className="circular-progress-bar"
           style={{
-            transform: `rotate(-90deg)`,
+            transform: `rotate(90deg)`,
             transformOrigin: '50% 50%'
           }}
         />

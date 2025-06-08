@@ -114,25 +114,40 @@ export const ModernTimerDisplay = ({
 
       {/* Circular Progress with Timer */}
       <div className="timer-circle-container">
+        <div className="timer-start-end-info">
+          <div className="timer-start-info">
+            <span className="timer-label">Start</span>
+            <div className="start-time-with-edit">
+              <span className="start-time">{formatTimeOnly(startTime)}</span>
+              {fastingState === 'fasting' && startTime && (
+                <button
+                  className="inline-edit-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowEditTime(true);
+                  }}
+                  title="Edit start time"
+                >
+                  ✏️
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="timer-end-info">
+            <span className="timer-label">Target</span>
+            <span className="end-time">
+              {(() => {
+                const targetHours = fastingState === 'fasting' ? 16 : 8;
+                const endTime = new Date(startTime.getTime() + targetHours * 60 * 60 * 1000);
+                return formatTimeOnly(endTime);
+              })()}
+            </span>
+          </div>
+        </div>
         <CircularProgress progress={progress} strokeWidth={20}>
           <div className="timer-content" onClick={onToggleTimeDisplay} style={{ cursor: 'pointer' }}>
             <div className="start-info">
               <span className="start-date">{formatDate(startTime)}</span>
-              <div className="start-time-with-edit">
-                <span className="start-time">{formatTimeOnly(startTime)}</span>
-                {fastingState === 'fasting' && startTime && (
-                  <button
-                    className="inline-edit-button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowEditTime(true);
-                    }}
-                    title="Edit start time"
-                  >
-                    ✏️
-                  </button>
-                )}
-              </div>
             </div>
             <div className="elapsed-time">
               {formatTime(displayTime)}

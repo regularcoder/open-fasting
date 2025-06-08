@@ -204,13 +204,15 @@ body {
   height: 40px;
 }
 
-.edit-time-button:hover {
+.edit-time-button:hover,
+.inline-edit-button:hover {
   background: rgba(59, 130, 246, 0.2);
   border-color: rgba(59, 130, 246, 0.4);
   transform: scale(1.05);
 }
 
-.edit-time-button:active {
+.edit-time-button:active,
+.inline-edit-button:active {
   transform: scale(0.95);
 }
 
@@ -467,10 +469,9 @@ body {
 }
 
 .benefits-list li {
-  padding: 0.5rem 0;
+  padding: 0.5rem 0 0.5rem 1.5rem;
   color: #718096;
   position: relative;
-  padding-left: 1.5rem;
 }
 
 .benefits-list li::before {
@@ -517,6 +518,45 @@ body {
 
 .timer-circle-container {
   margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.timer-start-end-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.5rem;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.timer-start-info,
+.timer-end-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  pointer-events: auto;
+}
+
+.timer-label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.start-time,
+.end-time {
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  color: #374151;
 }
 
 .circular-progress {
@@ -570,11 +610,6 @@ body {
   font-weight: 500;
 }
 
-.start-time {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
 .start-time-with-edit {
   display: flex;
   align-items: center;
@@ -599,15 +634,6 @@ body {
   flex-shrink: 0;
 }
 
-.inline-edit-button:hover {
-  background: rgba(59, 130, 246, 0.2);
-  border-color: rgba(59, 130, 246, 0.4);
-  transform: scale(1.1);
-}
-
-.inline-edit-button:active {
-  transform: scale(0.9);
-}
 
 .elapsed-time {
   font-size: 2.5rem;
@@ -689,6 +715,14 @@ body {
     justify-content: center;
   }
   
+  .timer-start-end-info {
+    padding: 0 0.25rem;
+  }
+  
+  .timer-label {
+    font-size: 0.65rem;
+  }
+  
   .circular-progress {
     width: 240px !important;
     height: 240px !important;
@@ -710,10 +744,6 @@ body {
   
   .start-date {
     font-size: 0.7rem;
-  }
-  
-  .start-time {
-    font-size: 0.8rem;
   }
   
   .start-time-with-edit {
