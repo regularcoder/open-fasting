@@ -24,10 +24,15 @@ export const useFastingTimer = (onFastComplete: (startTime: Date, endTime: Date,
     useEffect(() => {
         const savedState = localStorage.getItem('fastingState')
         const savedStartTime = localStorage.getItem('startTime')
+        const savedShowElapsed = localStorage.getItem('showElapsed')
 
         if (savedState && savedStartTime) {
             setFastingState(savedState as FastingState)
             setStartTime(new Date(savedStartTime))
+        }
+        
+        if (savedShowElapsed !== null) {
+            setShowElapsed(savedShowElapsed === 'true')
         }
     }, [])
 
@@ -81,7 +86,9 @@ export const useFastingTimer = (onFastComplete: (startTime: Date, endTime: Date,
     }
 
     const toggleTimeDisplay = () => {
-        setShowElapsed(!showElapsed)
+        const newShowElapsed = !showElapsed
+        setShowElapsed(newShowElapsed)
+        localStorage.setItem('showElapsed', newShowElapsed.toString())
     }
 
     const updateStartTime = (newStartTime: Date) => {
