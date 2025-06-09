@@ -37,7 +37,7 @@ export const useFastingTimer = (onFastComplete: (startTime: Date, endTime: Date,
     }, [])
 
     useEffect(() => {
-        let interval: number | undefined
+        let interval: NodeJS.Timeout | undefined
 
         if (fastingState === 'fasting' && startTime) {
             interval = setInterval(() => {
