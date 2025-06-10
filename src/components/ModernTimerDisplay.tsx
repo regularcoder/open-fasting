@@ -147,7 +147,7 @@ export const ModernTimerDisplay = ({
         <CircularProgress progress={progress} strokeWidth={20}>
           <div className="timer-content" onClick={onToggleTimeDisplay} style={{ cursor: 'pointer' }}>
             <div className="start-info">
-              <span className="start-date">{formatDate(startTime)}</span>
+              <span className="past-fast-date">{formatDate(startTime)}</span>
             </div>
             <div className="elapsed-time">
               {formatTime(displayTime)}

@@ -41,7 +41,7 @@ export const HistoryItem = ({ record, onDelete, onUpdate }: HistoryItemProps) =>
                     </div>
                     <span className="separator">→</span>
                     <div className="date-with-edit">
-                        <span className="end-date">{formatDate(record.endTime)}</span>
+                        <span className="start-date">{formatDate(record.endTime)}</span>
                         <button
                             className="inline-edit-button"
                             onClick={() => setEditModalType('end')}
