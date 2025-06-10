@@ -4,7 +4,7 @@ import { useFastingTimer } from '../hooks/useFastingTimer'
 import { useFastHistory } from '../hooks/useFastHistory'
 
 export const Home = () => {
-    const { fastHistory, addFast, deleteFast } = useFastHistory()
+    const { fastHistory, addFast, deleteFast, updateFast } = useFastHistory()
     
     const {
         fastingState,
@@ -33,6 +33,7 @@ export const Home = () => {
             <FastHistory
                 fastHistory={fastHistory}
                 onDeleteFast={deleteFast}
+                onUpdateFast={updateFast}
             />
         </>
     )

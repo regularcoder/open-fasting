@@ -4,9 +4,15 @@ interface EditTimeModalProps {
     isOpen: boolean
     startTime: Date | null
     onClose: (updatedTime?: Date) => void
+    title?: string // Optional prop for customizing the modal title
 }
 
-export const EditTimeModal = ({ isOpen, startTime, onClose }: EditTimeModalProps) => {
+export const EditTimeModal = ({ 
+    isOpen, 
+    startTime, 
+    onClose,
+    title = "Edit Time" // Default title 
+}: EditTimeModalProps) => {
     const [date, setDate] = useState<string>('')
     const [time, setTime] = useState<string>('')
 
@@ -43,7 +49,7 @@ export const EditTimeModal = ({ isOpen, startTime, onClose }: EditTimeModalProps
     return (
         <div className="modal-overlay" onClick={() => onClose()}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <h3 className="modal-title">Edit Start Time</h3>
+                <h3 className="modal-title">{title}</h3>
                 
                 <div className="datetime-inputs">
                     <div className="input-group">
@@ -70,9 +76,15 @@ export const EditTimeModal = ({ isOpen, startTime, onClose }: EditTimeModalProps
                 <div className="modal-buttons">
                     <button 
                         className="cancel-button"
+                        onClick={() => onClose()}
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        className="save-button"
                         onClick={handleClose}
                     >
-                        Done
+                        Save
                     </button>
                 </div>
             </div>

@@ -4,9 +4,10 @@ import { HistoryItem } from './HistoryItem'
 interface FastHistoryProps {
     fastHistory: FastRecord[]
     onDeleteFast: (fastId: string) => void
+    onUpdateFast: (fastId: string, updatedFields: Partial<Omit<FastRecord, 'id'>>) => void
 }
 
-export const FastHistory = ({ fastHistory, onDeleteFast }: FastHistoryProps) => {
+export const FastHistory = ({ fastHistory, onDeleteFast, onUpdateFast }: FastHistoryProps) => {
     return (
         <div className="history-section">
             <h3 className="history-title">Past Fasts</h3>
@@ -19,6 +20,7 @@ export const FastHistory = ({ fastHistory, onDeleteFast }: FastHistoryProps) => 
                             key={record.id} 
                             record={record} 
                             onDelete={onDeleteFast}
+                            onUpdate={onUpdateFast}
                         />
                     ))}
                 </div>
