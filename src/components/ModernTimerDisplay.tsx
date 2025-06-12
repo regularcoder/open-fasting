@@ -72,12 +72,31 @@ export const ModernTimerDisplay = ({
   }
 
   const formatTimeOnly = (date: Date) => {
-    return date.toLocaleTimeString('en-GB', { 
-      hour: '2-digit', 
+    return date.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
       minute: '2-digit',
       hour12: false
     })
   }
+
+  const isToday = (date: Date) => {
+    const now = new Date()
+    return (
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+    )
+  }
+
+  // Helper component to display date (if not today) and time
+  const DateTimeDisplay = ({ date }: { date: Date }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      {!isToday(date) && (
+        <span className="past-fast-date">{formatDate(date)}</span>
+      )}
+      <span className="current-fasting-time">{formatTimeOnly(date)}</span>
+    </div>
+  )
 
   if (!startTime) {
     return (
@@ -118,7 +137,7 @@ export const ModernTimerDisplay = ({
           <div className="timer-start-info">
             <span className="timer-label">Start</span>
             <div className="start-time-with-edit">
-              <span className="start-time">{formatTimeOnly(startTime)}</span>
+              <DateTimeDisplay date={startTime} />
               {fastingState === 'fasting' && startTime && (
                 <button
                   className="inline-edit-button"
@@ -135,13 +154,11 @@ export const ModernTimerDisplay = ({
           </div>
           <div className="timer-end-info">
             <span className="timer-label">Target</span>
-            <span className="end-time">
-              {(() => {
-                const targetHours = fastingState === 'fasting' ? 16 : 8;
-                const endTime = new Date(startTime.getTime() + targetHours * 60 * 60 * 1000);
-                return formatTimeOnly(endTime);
-              })()}
-            </span>
+            {(() => {
+              const targetHours = fastingState === 'fasting' ? 16 : 8;
+              const endTimeCalc = new Date(startTime.getTime() + targetHours * 60 * 60 * 1000);
+              return <DateTimeDisplay date={endTimeCalc} />
+            })()}
           </div>
         </div>
         <CircularProgress progress={progress} strokeWidth={20}>
