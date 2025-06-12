@@ -560,16 +560,11 @@ body {
 }
 
 .timer-start-end-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.5rem;
-  z-index: 1;
-  pointer-events: none;
+  padding: 0;
+  width: 100%;
 }
 
 .timer-start-info,
@@ -753,8 +748,7 @@ body {
   }
   
   .timer-start-end-info {
-    padding: 0
-    0.25rem;
+    padding: 0 0.25rem;
   }
   
   .timer-label {

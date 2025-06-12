@@ -133,34 +133,6 @@ export const ModernTimerDisplay = ({
 
       {/* Circular Progress with Timer */}
       <div className="timer-circle-container">
-        <div className="timer-start-end-info">
-          <div className="timer-start-info">
-            <span className="timer-label">Start</span>
-            <div className="start-time-with-edit">
-              <DateTimeDisplay date={startTime} />
-              {fastingState === 'fasting' && startTime && (
-                <button
-                  className="inline-edit-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowEditTime(true);
-                  }}
-                  title="Edit start time"
-                >
-                  ✏️
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="timer-end-info">
-            <span className="timer-label">Target</span>
-            {(() => {
-              const targetHours = fastingState === 'fasting' ? 16 : 8;
-              const endTimeCalc = new Date(startTime.getTime() + targetHours * 60 * 60 * 1000);
-              return <DateTimeDisplay date={endTimeCalc} />
-            })()}
-          </div>
-        </div>
         <CircularProgress progress={progress} strokeWidth={20}>
           <div className="timer-content" onClick={onToggleTimeDisplay} style={{ cursor: 'pointer' }}>
             <div className="start-info">
@@ -176,6 +148,36 @@ export const ModernTimerDisplay = ({
             </div>
           </div>
         </CircularProgress>
+      </div>
+
+      {/* Timer Start/End Info */}
+      <div className="timer-start-end-info">
+        <div className="timer-start-info">
+          <span className="timer-label">Start</span>
+          <div className="start-time-with-edit">
+            <DateTimeDisplay date={startTime} />
+            {fastingState === 'fasting' && startTime && (
+              <button
+                className="inline-edit-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowEditTime(true);
+                }}
+                title="Edit start time"
+              >
+                ✏️
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="timer-end-info">
+          <span className="timer-label">Target</span>
+          {(() => {
+            const targetHours = fastingState === 'fasting' ? 16 : 8;
+            const endTimeCalc = new Date(startTime.getTime() + targetHours * 60 * 60 * 1000);
+            return <DateTimeDisplay date={endTimeCalc} />
+          })()}
+        </div>
       </div>
 
       {/* Action Button */}
