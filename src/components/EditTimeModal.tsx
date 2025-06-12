@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 interface EditTimeModalProps {
     isOpen: boolean
@@ -46,7 +47,8 @@ export const EditTimeModal = ({
         }
     }
 
-    return (
+    // Mount the modal at the document body level so it's not affected by ancestor styles (e.g., transforms)
+    return createPortal(
         <div className="modal-overlay" onClick={() => onClose()}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <h3 className="modal-title">{title}</h3>
@@ -88,6 +90,7 @@ export const EditTimeModal = ({
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }
